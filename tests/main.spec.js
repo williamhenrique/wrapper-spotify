@@ -42,6 +42,7 @@ describe('Spotify Wrapper', () => {
         beforeEach( () =>{
             fetchedStub = sinon.stub(global, 'fetch');
             promise = fetchedStub.resolves({ json: () => {} });
+            
         });
     
         afterEach( () =>{
@@ -71,5 +72,11 @@ describe('Spotify Wrapper', () => {
                 .calledWith('https://api.spotify.com/v1/search?q=matanza&type=artist,albums');
             });
         });
+        it('Shold return the JSON data from promise', () => {
+            fetchedStub.resolves({ json: () => { body: 'json' } });
+            const artists = search('matanza', 'artist');
+            expect(artists.resolveValue).to.be.eql({ body: 'json' });
+        })
+
     });
 });

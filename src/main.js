@@ -1,5 +1,6 @@
 export const search = (query, type) => {
-    return fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`);
+    return fetch(`https://api.spotify.com/v1/search?q=${query}&type=${type}`)
+    .then(dados => dados.json());
 }
 export const searchArtists = () => {}
 export const searchAlbums = () => {}

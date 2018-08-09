@@ -7,6 +7,19 @@ chai.use(sinonChai);
 global.fetch = require('node-fetch');
 
 describe('Spotify Wrapper', () => {
+
+    let fetchedStub;
+    let promise;
+    beforeEach( () =>{
+        fetchedStub = sinon.stub(global, 'fetch');
+        promise = fetchedStub.resolves({ json: () => {} });
+        
+    });
+
+    afterEach( () =>{
+        fetchedStub.restore();
+    });
+
     describe('Smoke tests', () => {
         it('Shold a method search', () => {
             expect(search).to.exist;
@@ -33,21 +46,10 @@ describe('Spotify Wrapper', () => {
         });
 
     });
-    
-    
+     
     describe('Generic Test', () => {
         
-        let fetchedStub;
-        let promise;
-        beforeEach( () =>{
-            fetchedStub = sinon.stub(global, 'fetch');
-            promise = fetchedStub.resolves({ json: () => {} });
-            
-        });
-    
-        afterEach( () =>{
-            fetchedStub.restore();
-        });
+       
 
         it('Shold call fetch function', () => {
             const artists = search(); 
@@ -72,11 +74,60 @@ describe('Spotify Wrapper', () => {
                 .calledWith('https://api.spotify.com/v1/search?q=matanza&type=artist,albums');
             });
         });
-        it('Shold return the JSON data from promise', () => {
-            fetchedStub.resolves({ json: () => { body: 'json' } });
-            const artists = search('matanza', 'artist');
-            expect(artists.resolveValue).to.be.eql({ body: 'json' });
-        })
+        // it('Shold return the JSON data from promise', () => {
+        //     fetchedStub.resolves({ json: () => { body: 'json' } });
+        //     const artists = search('matanza', 'artist');
+        //     expect(artists.resolveValue).to.be.eql({ body: 'json' });
+        // })
 
     });
+
+    describe('SearchArtist', () =>{
+        it('Shoud call fetch function', () =>{
+            const artists = searchArtists('matanza');
+            expect(fetchedStub).to.have.been.calledOnce;
+        });
+
+        it('Shoud call fetch with correct url', () =>{
+            const artists = searchArtists('matanza');
+            expect(fetchedStub).to.be.calledWith('https://api.spotify.com/v1/search?q=matanza&type=artist');
+        });
+    });
+
+    describe('SearchAlbums', () =>{
+        it('Shoud call fetch function', () =>{
+            const albums = searchAlbums('matanza');
+            expect(fetchedStub).to.have.been.calledOnce;
+        });
+
+        it('Shoud call fetch with correct url', () =>{
+            const albums = searchAlbums('matanza');
+            expect(fetchedStub).to.be.calledWith('https://api.spotify.com/v1/search?q=matanza&type=album');
+        });
+    });
+
+    describe('SearchATracks', () =>{
+        it('Shoud call fetch function', () =>{
+            const tracks = searchTracks('matanza');
+            expect(fetchedStub).to.have.been.calledOnce;
+        });
+
+        it('Shoud call fetch with correct url', () =>{
+            const tracks = searchTracks('matanza');
+            expect(fetchedStub).to.be.calledWith('https://api.spotify.com/v1/search?q=matanza&type=track');
+        });
+    });
+
+    describe('SearchAPlaylist', () =>{
+        it('Shoud call fetch function', () =>{
+            const playlist = searchPlaylists('matanza');
+            expect(fetchedStub).to.have.been.calledOnce;
+        });
+
+        it('Shoud call fetch with correct url', () =>{
+            const playlist = searchPlaylists('matanza');
+            expect(fetchedStub).to.be.calledWith('https://api.spotify.com/v1/search?q=matanza&type=playlist');
+        });
+    });
+
 });

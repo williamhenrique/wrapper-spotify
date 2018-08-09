@@ -37,23 +37,48 @@ describe('Spotify Wrapper', () => {
     });
 
     describe('Generic Test', () => {
+        let fetchedStub;
+        let promisse;
+        beforeEach(()=>{
+            fetchedStub = sinon.stub(global, 'fetch');
+            promisse = fetchedStub.returnsPromise();
+        });
+
+        afterEach(() => {
+            fetchedStub.restore();    
+        });
+
         it('Shold call fetch function', () => {
-            const fetchedStub = sinon.stub(global, 'fetch');
+            
             const artists = search(); 
             expect(fetchedStub).to.have.been.calledOnce;
-
-            fetchedStub.restore();
         });
 
         it('Shold receive correct url to fetch', () => {
-            const fetchedStub = sinon.stub(global, 'fetch');
-            const artists = search('matanza', 'artists'); 
-            expect(fetchedStub).to.have.been
-                .calledWith('https://api.spotify.com/v1/search?q=matanza&type=artists');
+            context('Passing one type', () => {
+                const artists = search('matanza', 'artists'); 
+                expect(fetchedStub).to.have.been
+                    .calledWith('https://api.spotify.com/v1/search?q=matanza&type=artists');
 
-            const albums = search('matanza', 'albums'); 
-            expect(fetchedStub).to.have.been
-                .calledWith('https://api.spotify.com/v1/search?q=matanza&type=albums');
+                const albums = search('matanza', 'albums'); 
+                expect(fetchedStub).to.have.been
+                    .calledWith('https://api.spotify.com/v1/search?q=matanza&type=albums');
+
+                   
+            });
+            context('Passing more type', () => {
+              
+                const albums = search('matanza', ['matanza', 'Santa Madre Cassino']); 
+                expect(fetchedStub).to.have.been
+                    .calledWith('https://api.spotify.com/v1/search?q=matanza&type=matanza,Santa Madre Cassino');
+            });
         });
+
+        it('should return the JSON Data from the Promise', () => {
+            promise.resolves({ body: 'json' });
+            const artists = search('Incubus', 'artist');
+             expect(artists.resolveValue).to.be.eql({ body: 'json' });
+          });
+    
     });
 });

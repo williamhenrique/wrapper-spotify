@@ -1,20 +1,24 @@
 import {
-    search,
-    searchArtists,
-    searchAlbums,
-    searchPlaylists,
-  } from './search';
-   import {
     getAlbum,
     getAlbums,
-    getAlbumTracks,
-  } from './album';
-   module.exports = {
-    search,
+    getAlbumTracks
+} from './album';
+
+
+
+import {
     searchArtists,
     searchAlbums,
-    searchPlaylists,
-    getAlbum,
-    getAlbums,
-    getAlbumTracks,
-  };
+    searchTracks,
+    searchPlaylists
+} from './search';
+
+module.export = {
+        getAlbum, 
+        getAlbums,
+        getAlbumTracks,
+        searchArtists,
+        searchAlbums,
+        searchTracks,
+        searchPlaylists
+}
